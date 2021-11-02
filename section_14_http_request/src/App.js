@@ -13,21 +13,26 @@ function App() {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await fetch("https://swapi.dev/api/films/");
+      const response = await fetch(
+        "https://http-handle-default-rtdb.europe-west1.firebasedatabase.app/movies.json"
+      );
       if (!response.ok) {
         throw new Error("Something went wrong!");
       }
 
       const data = await response.json();
 
-      const transformedMovies = data.results.map((movieData) => {
-        return {
-          id: movieData.episode_id,
-          title: movieData.title,
-          openingText: movieData.opening_crawl,
-          releaseDate: movieData.release_date
-        };
-      });
+      const transformedMovies = [];
+
+      for (const key in data) {
+        transformedMovies.push({
+          id: key,
+          title: data[key].title,
+          openingText: data[key].openingText,
+          releaseDate: data[key].releaseDate
+        });
+      }
+
       setMovies(transformedMovies);
     } catch (error) {
       setError(error.message);
