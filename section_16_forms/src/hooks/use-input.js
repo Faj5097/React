@@ -1,28 +1,33 @@
 import { useState } from "react";
 
-const useInput = () => {
-  const [enteredName, setEnteredName] = useState("");
-  const [enteredNameTouched, setEnteredNameTouched] = useState(false);
+const useInput = (validateValue) => {
+  const [enteredValue, setEnteredValue] = useState("");
+  const [enteredValueIsTouched, setEnteredValueIsTouched] = useState(false);
 
-  const enteredNameIsValid = enteredName.trim() !== "";
+  const enteredValueIsValid = validateValue(enteredValue);
 
-  const nameInputIsInvalid = !enteredNameIsValid && enteredNameTouched;
+  const valueHasError = !enteredValueIsValid && enteredValueIsTouched;
 
-  const nameInputChangeHandler = (e) => {
-    setEnteredName(e.target.value);
+  const valueChangeHandler = (e) => {
+    setEnteredValue(e.target.value);
   };
 
-  const nameInputBlurHandler = (e) => {
-    setEnteredNameTouched(true);
+  const valueBlurHandler = (e) => {
+    setEnteredValueIsTouched(true);
+  };
+
+  const reset = () => {
+    setEnteredValue("");
+    setEnteredValueIsTouched(false);
   };
 
   return {
-    value: enteredName,
-    isTouched: enteredNameTouched,
-    isValid: enteredNameIsValid,
-    hasError: nameInputIsInvalid,
-    changeHandler: nameInputChangeHandler,
-    blurHandler: nameInputBlurHandler
+    value: enteredValue,
+    isValid: enteredValueIsValid,
+    hasError: valueHasError,
+    valueChangeHandler,
+    valueBlurHandler,
+    reset,
   };
 };
 
